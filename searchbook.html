@@ -1,0 +1,134 @@
+<html>
+
+<head>
+    <title>Add Book</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+
+</head>
+
+<body>
+    <div style="padding: 18px;font-size : 24px;">search book</div>
+
+    <form method="POST" id="serachform">
+        <table>
+            <tr>
+                <td>Search Book Name:</td>
+                <td><input type="text" id="booknameid" name="bookname" /></td>
+            </tr>
+            <tr>
+                <td>Search Author Name:</td>
+                <td><input type="text" name="author" id="authorid" /></td>
+            </tr>
+            <tr>
+                <td>Search category :</td>
+                <td> <select name="category" id="ddlcatid"">
+                        <option value=" 0">==select Option==</option>
+                        <option value="1">A</option>
+                        <option value="2">B</option>
+                        <option value="3">C</option>
+                        <option value="4">D</option>
+                        <option value="5">E</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="serach">
+                </td>
+            </tr>
+
+        </table>
+    </form>
+    <div class="table-data" id="searchbook">
+        <h2>get data</h2>
+        <table border="1" id="searchbookdata">
+            <tr>
+                <th>id</th>
+                <th>bookname</th>
+                <th>publisher Name</th>
+                <th>date</th>
+                <th>category</th>
+                <th>Action</th>
+            </tr>
+            <tbody>
+                <!-- <tr>
+                    <% if(bookdata.length!=0){%>
+
+                        <td>
+                            <%=bookdata.id %>
+                        </td>
+                        <td>
+                            <%=data.bookname %>
+                        </td>
+                        <td>
+                            <%=data.author %>
+                        </td>
+                        <td>
+                            <%=data.date %>
+                        </td>
+                        <td>
+                            <%=data.category %>
+                        </td>
+                        <td><a class='btn btn-danger' href='#' onclick='onDelete(" + data.id + ")'>Delete</a></td>
+
+                        <% } %>
+                </tr> -->
+            </tbody>
+
+        </table>
+    </div>
+    <script type="text/javascript">
+        var $searchbook = $("#searchbook");
+        $(function () {
+            $searchbook.hide();
+            onSubmit();
+        });
+        function onSubmit() {
+            $("#serachform").submit(function (e) {
+                e.preventDefault();
+                var data = $(this).serializeArray();
+                $.post("/searchbook", data, function (response, success, error) {
+                    var bookdata = JSON.parse(response);
+                    tablehtml(bookdata);
+                    // var tblhtml = "";
+                    // bookdata.forEach(book => {
+                    //     tblhtml += "<tr><td>" + bookdata.bookname + "</td><td>" + bookdata.author + "</td><td>" + bookdata.date + "</td><td>" + bookdata.category + "</td><td><a class='btn btn-danger' href='#' onclick='onDelete(" + bookdata.id + ")'>Delete</a></td></tr>"
+                    // });
+                    // ("#searchbookdata").find("tbody").html(tblhtml);
+
+                });
+            });
+        }
+        function tablehtml(bookrecord) {
+            if (bookrecord != "") {
+                $searchbook.show();
+                var tblhtml = "";
+                bookrecord.forEach(book => {
+                    var dateString = book.date.format("yyyy-MM-DD");;
+                    tblhtml += "<tr><td>" + book.bookname + "</td><td>" + book.author + "</td><td>" + dateString + "</td><td>" + book.category + "</td><td><a  href='#' onclick='deleteBook(" + book.id + ")'>Delete</a></td><td><a  href='#' onclick='editBook(" + book.id + ")'>edit</a></td></tr>"
+                });
+
+                $searchbook.find("table tbody").html(tblhtml);
+            }
+            else {
+                alert("no data..!! According to your input, try again ")
+            }
+        }
+
+        function deleteBook(id) {
+            $.post("/deletebook", { id: id }, function (response, success, error) {
+                alert("Book successfully deleted. ");
+                location.href = "/";
+            })
+        }
+        function editBook(id) {
+            $.post("/edit/:id", { id: id }, function (response, success, error) {
+                alert("Book successfully edited. ");
+                location.href = "/";
+            })
+        }
+    </script>
+</body>
+
+</html>

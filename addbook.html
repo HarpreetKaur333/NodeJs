@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <title>Add Book</title>
+    <script>
+        function validateForm() {
+            try {
+                var bookname = document.getElementById('booknameid').value;
+                var author = document.getElementById('authorid').value;
+                var pdate = document.getElementById('pdateid').value;
+                var category = document.getElementById('ddlcatid').value;
+
+                if (bookname == null || bookname == '') {
+                    alert('please enter book name.');
+                    return false;
+                } else if (author == null || author == '') {
+                    alert('please author author name.');
+                } else if (pdate == null || pdate == '') {
+                    alert('please enter date.');
+                } else if (category == null || category == '') {
+                    alert('please enter category of book.');
+                } else {
+                    alert("You are successfully Done..!!!" + "bookName: " + bookname);
+                }
+
+            } catch (error) {
+            }
+
+        }
+
+
+    </script>
+
+
+</head>
+
+<body>
+    <div style="padding: 18px;font-size : 24px;">add book</div>
+
+    <form method="POST" onSubmit="return validateForm();" id="booklibForm" action="/savebook">
+        <table>
+            <tr>
+                <td>Book Name:</td>
+                <td><input type="text" id="booknameid" name="bookname" /></td>
+            </tr>
+            <tr>
+                <td>Author Name:</td>
+                <td><input type="text" name="author" id="authorid" /></td>
+            </tr>
+            <tr>
+                <td>Date pusblisher:</td>
+                <td><input type="date" name="pdate" id="pdateid" /></td>
+            </tr>
+            <tr>
+                <td>category :</td>
+                <td> <select name="category" id="ddlcatid"">
+                        <option value=" 0">==select Option==</option>
+                        <option value="1">A</option>
+                        <option value="2">B</option>
+                        <option value="3">C</option>
+                        <option value="4">D</option>
+                        <option value="5">E</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td> <input value="Submit" type="submit" /><br />
+                </td>
+            </tr>
+
+        </table>
+
+    </form>
+</body>
+
+</html>

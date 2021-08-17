@@ -35,6 +35,13 @@ app.use(bodyParser.json());
 
 app.get('/HostelReservations', function (req, res) {
     res.sendFile(path.join(__dirname + '/HostelReservations.html'));
+    var UserId = req.params.id;
+    var sql = `SELECT * FROM hostelreservations WHERE id=${UserId}`;
+    db.query(sql, function (err, data) {
+        if (err) throw err;
+
+        res.render('users-form', { title: 'User List', editData: data[0] });
+    });
 });
 app.post('/HostelReservations', function (req, res) {
 

@@ -1,0 +1,71 @@
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".editme").click(function () {
+            event.preventDefault();
+            name = $(this).val();
+            id = $(this).attr('id');
+            $("#showarea").css("display", "none");
+            $("#editarea").css("display", "block");
+            $("#user-name").val(name);
+            $("#user-id").val(id);
+            $('#user-submit').click(function () {
+                var payload = {
+                    name: $('#user-name').val(),
+                    id: $('#user-id').val()
+                };
+                $.ajax({
+                    url: "/edituser",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+                        $('#output').html(data.responseText);
+                    }
+                });
+            });
+        });
+    });
+</script>
+<div id="showarea">
+
+    <h3>List of all users</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <% for(var i=0; i<names.length; i++) {%>
+            <tr>
+                <td>
+                    <%= names[i].id %>
+                </td>
+                <td>
+                    <%= names[i].name %>
+                </td>
+                <td>
+                    <a href="javascript:;" onclick="delete<%= names[i].id%>.submit();">delete</a>
+                    <form style="display:none" name="delete<%= names[i].id %>"
+                        action="/deleteuser?id=<%= names[i].id %>" method="post">
+                    </form>
+                </td>
+                <td>
+                    <button class="editme" id="<%= names[i].id %>" value="<%= names[i].name%>">edit</button>
+                </td>
+            </tr>
+            <% } %>
+    </table>
+    <a href="/adduser">Add new User</a>
+</div>
+
+<div id="editarea" style="display:none">
+    <h3>Edit User</h3>
+    <input id="user-name" type="text" />
+    <input type="hidden" id="user-id" />
+    <input id="user-submit" type="submit" />
+    <p id="output"></p>
+    <p><a href="/">Back</a></p>
+</div>
